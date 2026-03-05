@@ -1,0 +1,7 @@
+src/
+assets/
+tsconfig.json
+webpack.config.mjs
+.gitignore
+*.md
+!README.md
