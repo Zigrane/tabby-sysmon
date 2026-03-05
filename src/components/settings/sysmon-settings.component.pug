@@ -1,0 +1,75 @@
+.sysmon-settings
+  h3 System Monitor
+
+  .setting-group
+    toggle(
+      [(ngModel)]="sysmon.enabled",
+      (ngModelChange)="save()",
+      [text]="'Enable System Monitor'"
+    )
+
+  .setting-group
+    label Refresh Interval (ms)
+    input.form-control(
+      type="number",
+      [(ngModel)]="sysmon.refreshIntervalMs",
+      (ngModelChange)="save()",
+      [min]="500",
+      [max]="30000",
+      [step]="500"
+    )
+
+  .setting-group
+    label Panel Height (px)
+    input.form-control(
+      type="number",
+      [(ngModel)]="sysmon.panelHeight",
+      (ngModelChange)="save()",
+      [min]="35",
+      [max]="400"
+    )
+
+  .setting-group
+    label Disk Mount Point
+    input.form-control(
+      type="text",
+      [(ngModel)]="sysmon.diskMountPoint",
+      (ngModelChange)="save()"
+    )
+
+  .setting-group
+    toggle(
+      [(ngModel)]="sysmon.autoSwitchToRemote",
+      (ngModelChange)="save()",
+      [text]="'Auto-switch to remote metrics on SSH'"
+    )
+
+  .setting-group
+    label Connections Refresh Multiplier
+    input.form-control(
+      type="number",
+      [(ngModel)]="sysmon.connectionsRefreshMultiplier",
+      (ngModelChange)="save()",
+      [min]="1",
+      [max]="10"
+    )
+
+  h4 Visible Metrics
+
+  .setting-group
+    toggle([(ngModel)]="sysmon.showCpu", (ngModelChange)="save()", [text]="'CPU'")
+
+  .setting-group
+    toggle([(ngModel)]="sysmon.showMemory", (ngModelChange)="save()", [text]="'Memory'")
+
+  .setting-group
+    toggle([(ngModel)]="sysmon.showDisk", (ngModelChange)="save()", [text]="'Disk'")
+
+  .setting-group
+    toggle([(ngModel)]="sysmon.showNetwork", (ngModelChange)="save()", [text]="'Network'")
+
+  .setting-group
+    toggle([(ngModel)]="sysmon.showConnections", (ngModelChange)="save()", [text]="'Connections'")
+
+  .setting-group
+    toggle([(ngModel)]="sysmon.showSshSessions", (ngModelChange)="save()", [text]="'SSH Sessions'")

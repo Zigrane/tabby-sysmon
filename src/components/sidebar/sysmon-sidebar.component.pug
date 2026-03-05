@@ -1,0 +1,59 @@
+.sysmon-panel(
+  [style.height.px]="collapsed ? 20 : height",
+  [class.collapsed]="collapsed"
+)
+  .resize-handle((mousedown)="onResizeStart($event)")
+
+  //- Collapsed: thin clickable bar
+  .collapsed-bar(*ngIf="collapsed", (click)="toggleCollapse()")
+    span.source-tag {{ displaySource === 'local' ? 'L' : 'R' }}
+    span.warn-icon(*ngIf="currentMetrics?.partial") &#x26A0;
+    span.hostname {{ displaySource === 'local' ? 'localhost' : displayHost }}
+    span.expand-icon &#x25B2;
+
+  //- Expanded: metrics + info in one row
+  .panel-content(*ngIf="!collapsed && currentMetrics")
+    .metrics-area
+      .metrics-row
+        .metric-cell(*ngIf="showCpu")
+          span.metric-label CPU
+          span.metric-value {{ formatPercent(currentMetrics.cpu.usagePercent) }} ({{ currentMetrics.cpu.processCount }})
+          .progress-bar-container
+            .progress-bar-fill(
+              [class]="getBarClass(currentMetrics.cpu.usagePercent)",
+              [style.width.%]="clampPercent(currentMetrics.cpu.usagePercent)"
+            )
+
+        .metric-cell(*ngIf="showMemory")
+          span.metric-label MEM
+          span.metric-value {{ formatBytes(currentMetrics.memory.usedBytes) }}/{{ formatBytes(currentMetrics.memory.totalBytes) }} ({{ formatPercent(currentMetrics.memory.usagePercent) }})
+          .progress-bar-container
+            .progress-bar-fill(
+              [class]="getBarClass(currentMetrics.memory.usagePercent)",
+              [style.width.%]="clampPercent(currentMetrics.memory.usagePercent)"
+            )
+
+        .metric-cell(*ngIf="showDisk")
+          span.metric-label DISK
+          span.metric-value {{ formatBytes(currentMetrics.disk.usedBytes) }}/{{ formatBytes(currentMetrics.disk.totalBytes) }} ({{ formatPercent(currentMetrics.disk.usagePercent) }})
+          .progress-bar-container
+            .progress-bar-fill(
+              [class]="getBarClass(currentMetrics.disk.usagePercent)",
+              [style.width.%]="clampPercent(currentMetrics.disk.usagePercent)"
+            )
+
+        .metric-cell(*ngIf="showNetwork")
+          span.metric-label NET
+          span.metric-value.net-tx ↑{{ formatBytesPerSec(currentMetrics.network.txPerSec) }}
+          span.metric-value.net-rx ↓{{ formatBytesPerSec(currentMetrics.network.rxPerSec) }}
+
+        .metric-cell(*ngIf="showConnections")
+          span.metric-label CONN
+          span.metric-value {{ currentMetrics.connections.established }}
+          span.ssh-sessions(*ngIf="showSshSessions && currentMetrics.source === 'remote'") ssh:{{ currentMetrics.connections.sshSessions }}
+
+    .panel-right((click)="toggleCollapse()")
+      span.source-tag {{ displaySource === 'local' ? 'L' : 'R' }}
+      span.warn-icon(*ngIf="currentMetrics?.partial") &#x26A0;
+      span.hostname {{ displaySource === 'local' ? 'localhost' : displayHost }}
+      span.collapse-arrow &#x25BC;
